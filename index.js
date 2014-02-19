@@ -5,7 +5,7 @@ var http = require('http'),
 
 var app = connect()
   .use(connect.static(__dirname))
-  .use(connect.directory('css'));
+  .use(connect.directory(__dirname));
 
 http.createServer(app).listen(port);
 console.log('Listening on port %s', port);

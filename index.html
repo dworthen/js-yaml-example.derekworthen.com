@@ -3,14 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title>parsing example</title>
-  <script src="js-yaml-for-browser.js"></script>
-  <script src="build.js"></script>
+  <script src="js/js-yaml.js"></script>
+  <script src="js/jsFront.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <script>
     // loading and setting up js-yaml-front-matter
-    var jsFront = require('js-yaml-front-matter');
     jsFront(jsyaml);
-
 
     var parsed;
     var text = "---\n"
@@ -29,20 +27,55 @@
       +"Some Other content\n";
 
     $(function() {
-      $('#input').text(text);
+      $('#input').val(text);
       $('#parse').click(function(e) {
         e.preventDefault();
-        var toParse = $('#input').text();
+        var toParse = $('#input').val();
         parsed = jsyaml.loadFront(toParse);
         console.log(parsed);
-        $('#output').text(JSON.stringify(parsed));
+        $('#output').val(JSON.stringify(parsed));
       });
     });
   </script>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+  <style>
+    textarea { 
+      width: 100%;
+      height: 300px;
+    }
+    #parse {
+      width: 100%;
+    }
+    body {
+      background: #eee;
+    }
+  </style>
 </head>
 <body>
- <textarea id="input" rows="40" cols="75"></textarea> 
- <textarea id="output" rows="40" cols="75"></textarea> 
-  <button id="parse">Parse</button>
+  <div class="container">
+    <div class="row">
+      <div class="sixteen columns">
+        <h1>JS Yaml Front Matter</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="seven columns">
+        <textarea id="input"></textarea> 
+      </div>
+      <div class="two columns">
+        <button id="parse">Parse</button>
+      </div>
+      <div class="seven columns">
+        <textarea id="output"></textarea> 
+      </div>
+    </div>
+    <div class="row">
+      <p>
+        An example demonstrating <a href="https://github.com/dworthen/js-yaml-front-matter" target="_blank">js yaml front matter</a>.
+      </p>
+    </div>
+  </div>
 </body>
 </html>
