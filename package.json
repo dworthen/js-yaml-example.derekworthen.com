@@ -1,0 +1,19 @@
+{
+  "name": "js-yaml-example.derekworthen.com",
+  "version": "0.0.1",
+  "description": "An example demonstrating js-yaml-front-matter in the browser",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "dworthen/js-yaml-example.derekworthen.com.git"
+  },
+  "author": "dworthen",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "connect": "~2.13.0"
+  }
+}
