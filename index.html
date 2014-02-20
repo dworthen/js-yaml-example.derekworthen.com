@@ -5,35 +5,46 @@
   <title>parsing example</title>
   <script src="js/js-yaml.js"></script>
   <script src="js/jsFront.js"></script>
+  <script src="js/markdown.js"></script>
+  <script src="js/handlebars.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <script>
     // loading and setting up js-yaml-front-matter
     jsFront(jsyaml);
 
     var parsed;
+    var now = new Date().toDateString();
+    var temp;
+    var data;
+    var renderedHtml;
     var text = "---\n"
-      +"name: Derek Worthen\n"
-      +"age: young\n"
+      +"title: Welcome to JS YAML Front Matter\n"
+      +"author: Derek Worthen\n"
+      +"date: " + now + "\n"
       +"contact: \n"
        +" email: email@domain.com\n"
-       +" address: some location\n"
-      +"pets: \n"
-       +" - cat\n"
-       +" - dog\n"
-       +" - bat\n"
-      //+"match: !!js/regexp /pattern/gim"
-      //+"run: !!js/function function() { }"
+       +" phone: 012.345.6789\n"
+      +"Co-Authors: \n"
+       +" - me\n"
+       +" - myself\n"
+       +" - and I\n"
       +"---\n"
-      +"Some Other content\n";
+      +['#### JS & YAML Rendering in the Browser!',
+        'This example uses [js-yaml-front-matter](https://github.com/dworthen/js-yaml-front-matter), [markdown-js](https://github.com/evilstreak/markdown-js) and [handlebars.js](http://handlebarsjs.com/) to render the conent above.',
+        'Please see the [source code](https://github.com/dworthen/js-yaml-example.derekworthen.com) to see how this example works.'].join('\n\n');
 
     $(function() {
       $('#input').val(text);
-      $('#parse').click(function(e) {
-        e.preventDefault();
-        var toParse = $('#input').val();
-        parsed = jsyaml.loadFront(toParse);
-        console.log(parsed);
-        $('#output').val(JSON.stringify(parsed));
+      data = jsyaml.loadFront(text);
+      data.__content = markdown.toHTML(data.__content);
+      temp = Handlebars.compile($('#temp').html());
+      renderedHtml = temp(data);
+      $('#output').html(renderedHtml);
+
+      $('#input').on('input', function() {
+        data = jsyaml.loadFront($('#input').val());
+        data.__content = markdown.toHTML(data.__content);
+        $('#output').html(temp(data));
       });
     });
   </script>
@@ -41,6 +52,9 @@
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/skeleton.css">
   <style>
+    .container {
+      margin-top: 25px;
+    }
     textarea { 
       width: 100%;
       height: 300px;
@@ -51,24 +65,26 @@
     body {
       background: #eee;
     }
+    #inset {
+      margin: -20px 0 10px 0;
+      padding: 0 0 0 15px; 
+    }
+    span {
+      font-size: 12px;
+      font-weight: normal;
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="row">
       <div class="sixteen columns">
-        <h1>JS Yaml Front Matter</h1>
+        <textarea id="input"></textarea> 
       </div>
     </div>
     <div class="row">
-      <div class="seven columns">
-        <textarea id="input"></textarea> 
-      </div>
-      <div class="two columns">
-        <button id="parse">Parse</button>
-      </div>
-      <div class="seven columns">
-        <textarea id="output"></textarea> 
+      <div id="output" class="sixteen columns">
       </div>
     </div>
     <div class="row">
@@ -77,5 +93,34 @@
       </p>
     </div>
   </div>
+  <script id="temp" type="text/x-handlebars-template">
+    <h2>{{#if title}}{{title}}{{else}}No Title{{/if}}
+      <span>{{#if author}}{{author}},{{else}}No Author,{{/if}}
+      {{#if Co-Authors}}
+        {{#each Co-Authors}}
+          {{this}},
+        {{/each}}
+        {{else}}
+          No Co-Authors
+        {{/if}}
+         - 
+        {{#if contact}}
+          {{#if contact.email}}{{contact.email}},{{else}}No Email,{{/if}}
+          {{#if contact.phone}}{{contact.phone}}{{else}}No Phone{{/if}}
+        {{else}}
+          No Contact Information
+        {{/if}}
+      </span></h2>
+    <div id="inset">
+      <span>Date: {{#if date}}{{date}}{{else}}No Date{{/if}}</span>
+    </div>
+    <div id="content">
+      {{#if __content}}
+        {{{__content}}}
+      {{else}}
+        No Content
+      {{/if}}
+    </div>
+  </script>
 </body>
 </html>
